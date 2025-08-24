@@ -1,7 +1,7 @@
 
 # BlueCrossServer
 
-一個用於 Spigot 伺服器的跨分流訊息、指令、玩家列表同步插件。
+一個用於 Spigot 伺服器的跨分流訊息、指令、玩家列表同步插件
 
 ## 功能特色
 
@@ -16,12 +16,12 @@
 
 | 指令 | 用途 | 權限節點 |
 |------|------|----------|
-| `/bluecrossmsg <server|-all> <message>` | 傳送訊息到指定或全部分流給全部玩家 | `bluecrossserver.msg.broadcast` |
-| `/bluecrosspermmsg <server|-all> <permission> <message>` | 傳送訊息到指定或全部分流給有特定權限玩家 | `bluecrossserver.msg.permbroadcast` |
-| `/bluecrosscmd <server|-all> <command>` | 傳送指令到指定或全部分流執行 | `bluecrossserver.cmd.execute` |
+| `/bluecrossmsg <server\|-all> <message>` | 傳送訊息到指定或全部分流給全部玩家 | `bluecrossserver.msg.broadcast` |
+| `/bluecrosspermmsg <server\|-all> <permission> <message>` | 傳送訊息到指定或全部分流給有特定權限玩家 | `bluecrossserver.msg.permbroadcast` |
+| `/bluecrosscmd <server\|-all> <command>` | 傳送指令到指定或全部分流執行 | `bluecrossserver.cmd.execute` |
 | `/bluecrossdebug` | 切換 Debug 模式 | `bluecrossserver.debug` |
 
-> `server` 可填分流名稱，`-all` 代表全部分流。
+> `server` 可填分流名稱，`-all` 代表全部分流
 
 ## PlaceholderAPI 支援
 

@@ -11,17 +11,21 @@ commands:
     description: 傳送訊息到指定或全部分流給全部玩家
     usage: /bluecrossmsg <server|-all> <message>
     permission: "bluecrossserver.msg.broadcast"
+    permission-message: "§7§l[§a§l系統§7§l]§r§c你沒有權限使用此指令!"
   bluecrosspermmsg:
     description: 傳送訊息到指定或全部分流給有特定權限玩家
     usage: /bluecrosspermmsg <server|-all> <permission> <message>
     permission: "bluecrossserver.msg.permbroadcast"
+    permission-message: "§7§l[§a§l系統§7§l]§r§c你沒有權限使用此指令!"
   bluecrosscmd:
     description: 傳送指令到指定或全部分流執行
     usage: /bluecrosscmd <server|-all> <command>
     permission: "bluecrossserver.cmd.execute"
+    permission-message: "§7§l[§a§l系統§7§l]§r§c你沒有權限使用此指令!"
   bluecrossdebug:
     description: 切換調試模式
     permission: "bluecrossserver.debug"
+    permission-message: "§7§l[§a§l系統§7§l]§r§c你沒有權限使用此指令!"
 
 permissions:
   bluecrossserver.msg.broadcast:
@@ -36,4 +40,3 @@ permissions:
   bluecrossserver.debug:
     description: 允許使用調試指令
     default: op
-    
