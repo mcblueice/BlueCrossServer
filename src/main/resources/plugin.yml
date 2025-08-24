@@ -1,0 +1,39 @@
+name: BlueCrossServer
+version: '${project.version}'
+main: net.mcblueice.bluecrossserver.BlueCrossServer
+api-version: 1.20
+author: Blue
+description: "跨分流處理插件"
+prefix: BlueCrossServer
+softdepend: [PlaceholderAPI]
+commands:
+  bluecrossmsg:
+    description: 傳送訊息到指定或全部分流給全部玩家
+    usage: /bluecrossmsg <server|-all> <message>
+    permission: "bluecrossserver.msg.broadcast"
+  bluecrosspermmsg:
+    description: 傳送訊息到指定或全部分流給有特定權限玩家
+    usage: /bluecrosspermmsg <server|-all> <permission> <message>
+    permission: "bluecrossserver.msg.permbroadcast"
+  bluecrosscmd:
+    description: 傳送指令到指定或全部分流執行
+    usage: /bluecrosscmd <server|-all> <command>
+    permission: "bluecrossserver.cmd.execute"
+  bluecrossdebug:
+    description: 切換調試模式
+    permission: "bluecrossserver.debug"
+
+permissions:
+  bluecrossserver.msg.broadcast:
+    description: 允許使用 /bluecrossmsg 指令
+    default: op
+  bluecrossserver.msg.permbroadcast:
+    description: 允許使用 /bluecrosspermmsg 指令
+    default: op
+  bluecrossserver.cmd.execute:
+    description: 允許使用 /bluecrosscmd 指令
+    default: op
+  bluecrossserver.debug:
+    description: 允許使用調試指令
+    default: op
+    
