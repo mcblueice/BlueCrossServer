@@ -43,7 +43,7 @@ public class BlueCrossServer extends JavaPlugin implements PluginMessageListener
         getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", this);
         
         // 玩家列表刷新
-        Bukkit.getScheduler().runTaskTimer(this, () -> {
+        TaskScheduler.runRepeatingTask(this, () -> {
             try {
                 refreshPlayerListIfNeeded(true);
             } catch (Exception ignored) {}
@@ -402,56 +402,46 @@ public class BlueCrossServer extends JavaPlugin implements PluginMessageListener
         }
         
         switch (type) {
-            case "msg":
+            case "msg": {
                 String message = in.readUTF();
                 if (debugMode) {
                     getLogger().info("[DEBUG] 廣播消息: " + message);
                 }
-// main
-                Bukkit.getScheduler().runTask(this, () -> {
+                TaskScheduler.runTask(this, () -> {
                     Bukkit.broadcastMessage(message);
                 });
                 break;
-                
-            case "permmsg":
+            }
+            case "permmsg": {
                 final String permission = in.readUTF();
                 final String permMessage = in.readUTF();
-                
                 if (debugMode) {
                     getLogger().info("[DEBUG] 權限消息 - 權限: " + permission + ", 內容: " + permMessage);
                 }
-                
-// main
-                Bukkit.getScheduler().runTask(this, () -> {
+                TaskScheduler.runTask(this, () -> {
                     int count = 0;
                     for (Player p : Bukkit.getOnlinePlayers()) {
-// permmsg 權限檢查
                         boolean hasPermission = p.hasPermission(permission);
-                        
                         if (debugMode) {
-                            getLogger().info("[DEBUG] 檢查玩家 " + p.getName() + 
-                                           " 權限 " + permission + 
-                                           ": " + hasPermission);
+                            getLogger().info("[DEBUG] 檢查玩家 " + p.getName() + " 權限 " + permission + ": " + hasPermission);
                         }
-                        
                         if (hasPermission) {
                             p.sendMessage(permMessage);
                             count++;
                         }
                     }
-                    
                     if (debugMode) {
                         getLogger().info("[DEBUG] 權限消息已發送給 " + count + " 名玩家");
                     }
                 });
                 break;
-                
-            case "cmd":
+            }
+            case "cmd": {
                 final String command = in.readUTF();
                 if (debugMode) {
                     getLogger().info("[DEBUG] 執行命令: " + command);
                 }
-                Bukkit.getScheduler().runTask(this, () -> {
+                TaskScheduler.runTask(this, () -> {
                     try {
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
                     } catch (Exception e) {
@@ -460,18 +450,16 @@ public class BlueCrossServer extends JavaPlugin implements PluginMessageListener
                     }
                 });
                 break;
+            }
         }
     }
 
     // ====== 跨服玩家列表 相關方法 ======
-
     /**
      * 非同步請求整個網路的玩家列表；結果排序 (CASE_INSENSITIVE_ORDER)。
      * 若快取仍有效，立即回傳快取；否則透過 BungeeCord Plugin Messaging 取得。
      */
     public void requestAllPlayers(Consumer<List<String>> callback) {
-        Objects.requireNonNull(callback, "callback");
-
         // 快取仍有效 -> 立即返回
         if (System.currentTimeMillis() - lastFetchTime <= PLAYER_LIST_CACHE_TTL_MS && !cachedNetworkPlayers.isEmpty()) {
             callback.accept(cachedNetworkPlayers);
@@ -484,7 +472,7 @@ public class BlueCrossServer extends JavaPlugin implements PluginMessageListener
         if (fetchingPlayerList) return;
 
         if (Bukkit.getOnlinePlayers().isEmpty()) {
-            if (debugMode) getLogger().warning("[DEBUG] 無在線玩家可用作 PlayerList 請求載體");
+            if (debugMode) getLogger().warning("[DEBUG] 無在線玩家可用作 PlayerList 載體");
             fetchingPlayerList = false;
             // 直接回傳空 (避免 callback 永不觸發)
             for (Consumer<List<String>> cb : pendingPlayerListCallbacks) {
@@ -508,7 +496,7 @@ public class BlueCrossServer extends JavaPlugin implements PluginMessageListener
         }
 
         // 超時保護 (5 秒)
-        Bukkit.getScheduler().runTaskLater(this, () -> {
+        TaskScheduler.runTaskLater(this, () -> {
             if (fetchingPlayerList) {
                 fetchingPlayerList = false;
                 if (debugMode) getLogger().warning("[DEBUG] PlayerList 請求逾時");
