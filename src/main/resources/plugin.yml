@@ -6,6 +6,7 @@ author: Blue
 description: "跨分流處理插件"
 prefix: BlueCrossServer
 softdepend: [PlaceholderAPI]
+folia-supported: true
 commands:
   bluecrossmsg:
     description: 傳送訊息到指定或全部分流給全部玩家

@@ -6,7 +6,7 @@
 
     <groupId>net.mcblueice</groupId>
     <artifactId>BlueCrossServer</artifactId>
-    <version>1.1-b1</version>
+    <version>1.1-b2</version>
     <packaging>jar</packaging>
 
     <name>BlueCrossServer</name>
