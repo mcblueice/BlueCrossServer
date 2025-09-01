@@ -5,7 +5,6 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -105,11 +104,9 @@ public class BlueCrossServer extends JavaPlugin implements PluginMessageListener
 // Debug模式開關
             if (sender.hasPermission("bluecrossserver.debug")) {
                 debugMode = !debugMode;
-                sender.sendMessage(ChatColor.YELLOW + "調試模式: " + 
-                                  (debugMode ? ChatColor.GREEN + "啟用" : ChatColor.RED + "禁用"));
                 return true;
             } else {
-                sender.sendMessage(ChatColor.RED + "你沒有權限使用此指令");
+                sender.sendMessage("§c你沒有權限使用此指令");
                 return true;
             }
         }
@@ -118,7 +115,7 @@ public class BlueCrossServer extends JavaPlugin implements PluginMessageListener
 
     private boolean handleBlueCrossMsg(CommandSender sender, String[] args) {
         if (args.length < 2) {
-            sender.sendMessage(ChatColor.RED + "用法: /bluecrossmsg <server|-all> <message>");
+            sender.sendMessage("§c用法: /bluecrossmsg <server|-all> <message>");
             return false;
         }
         return handleMessage(sender, args, "msg", null);
@@ -126,7 +123,7 @@ public class BlueCrossServer extends JavaPlugin implements PluginMessageListener
 
     private boolean handleBlueCrossPermMsg(CommandSender sender, String[] args) {
         if (args.length < 3) {
-            sender.sendMessage(ChatColor.RED + "用法: /bluecrosspermmsg <server|-all> <permission> <message>");
+            sender.sendMessage("§c用法: /bluecrosspermmsg <server|-all> <permission> <message>");
             return false;
         }
         return handleMessage(sender, args, "permmsg", args[1]);
@@ -134,7 +131,7 @@ public class BlueCrossServer extends JavaPlugin implements PluginMessageListener
 
     private boolean handleBlueCrossCmd(CommandSender sender, String[] args) {
         if (args.length < 2) {
-            sender.sendMessage(ChatColor.RED + "用法: /bluecrosscmd <server|-all> <command>");
+            sender.sendMessage("§c用法: /bluecrosscmd <server|-all> <command>");
             return false;
         }
         
@@ -168,7 +165,7 @@ public class BlueCrossServer extends JavaPlugin implements PluginMessageListener
             sendToServer(target, out.toByteArray());
         }
         
-        sender.sendMessage(ChatColor.GREEN + "指令已發送到 " + (isAll ? "所有伺服器" : target));
+        sender.sendMessage("§a指令已發送到 " + (isAll ? "所有伺服器" : target));
         return true;
     }
 
@@ -218,7 +215,7 @@ public class BlueCrossServer extends JavaPlugin implements PluginMessageListener
             sendToServer(target, out.toByteArray());
         }
         
-        sender.sendMessage(ChatColor.GREEN + "消息已發送到 " + (isAll ? "所有伺服器" : target));
+        sender.sendMessage("§a消息已發送到 " + (isAll ? "所有伺服器" : target));
         return true;
     }
 
@@ -251,9 +248,7 @@ public class BlueCrossServer extends JavaPlugin implements PluginMessageListener
             return parsed;
         } catch (Exception e) {
             getLogger().warning("解析佔位符時發生錯誤: " + e.getMessage());
-            if (sender != null) {
-                sender.sendMessage(ChatColor.RED + "佔位符解析失敗: " + e.getMessage());
-            }
+            if (sender != null) sender.sendMessage("§c佔位符解析失敗: " + e.getMessage());
             return text;
         }
     }
@@ -263,8 +258,8 @@ public class BlueCrossServer extends JavaPlugin implements PluginMessageListener
             getLogger().info("[DEBUG] 原始顏色代碼: " + text);
         }
         
-// 轉換&§
-        text = ChatColor.translateAlternateColorCodes('&', text);
+// 先把 & 的傳統顏色碼轉為 §（保留 &x HEX 格式給後續步驟處理）
+        text = text.replaceAll("(?i)&([0-9A-FK-OR])", "§$1");
         
 // 處理 HEX 格式
         Matcher hexMatcher = RGB_HEX_PATTERN.matcher(text);
@@ -408,7 +403,9 @@ public class BlueCrossServer extends JavaPlugin implements PluginMessageListener
                     getLogger().info("[DEBUG] 廣播消息: " + message);
                 }
                 TaskScheduler.runTask(this, () -> {
-                    Bukkit.broadcastMessage(message);
+                    for (Player p : Bukkit.getOnlinePlayers()) {
+                        p.sendMessage(message);
+                    }
                 });
                 break;
             }
